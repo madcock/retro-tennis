@@ -1,0 +1,2 @@
+SOURCES_C   := $(CORE_DIR)/libretro.c $(CORE_DIR)/tennis.c
+SOURCES_CXX := 
