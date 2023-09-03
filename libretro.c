@@ -137,10 +137,14 @@ static void update_input(void)
    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
    {
       controller_pos1 -= 4.50;
+      if (controller_pos1 < 0)
+         controller_pos1 = 0;
    }
    else if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
    {
       controller_pos1 += 4.50;
+      if (controller_pos1 > 255)
+         controller_pos1 = 255;
    }
    tennis_paddle_move(controller_pos1, controller_pos2);
 }
