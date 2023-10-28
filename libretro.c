@@ -70,7 +70,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 
    info->timing = (struct retro_system_timing) {
       .fps = 60.0,
+#if !defined(SF2000)
       .sample_rate = 0.0,
+#else
+      .sample_rate = 11025,
+#endif
    };
 
    info->geometry = (struct retro_game_geometry) {
