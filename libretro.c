@@ -15,6 +15,14 @@
 static uint32_t *frame_buf;
 static struct retro_log_callback logging;
 static retro_log_printf_t log_cb;
+#if defined(SF2000)
+static retro_video_refresh_t video_cb;
+static retro_audio_sample_t audio_cb;
+static retro_audio_sample_batch_t audio_batch_cb;
+static retro_environment_t environ_cb;
+static retro_input_poll_t input_poll_cb;
+static retro_input_state_t input_state_cb;
+#endif
 
 static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 {
@@ -30,6 +38,15 @@ void retro_init(void)
    tennis_initialize(VIDEO_WIDTH, VIDEO_HEIGHT);
 
    frame_buf = calloc(VIDEO_PIXELS, sizeof(uint32_t));
+
+#if defined(SF2000)
+   enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
+   if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
+   {
+      log_cb(RETRO_LOG_INFO, "XRGB8888 is not supported.\n");
+      return false;
+   }
+#endif
 }
 
 void retro_deinit(void)
@@ -57,12 +74,14 @@ void retro_get_system_info(struct retro_system_info *info)
    info->valid_extensions = NULL;
 }
 
+#if !defined(SF2000)
 static retro_video_refresh_t video_cb;
 static retro_audio_sample_t audio_cb;
 static retro_audio_sample_batch_t audio_batch_cb;
 static retro_environment_t environ_cb;
 static retro_input_poll_t input_poll_cb;
 static retro_input_state_t input_state_cb;
+#endif
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
@@ -179,12 +198,14 @@ void retro_run(void)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
+#if !defined(SF2000)
    enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
    if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
    {
       log_cb(RETRO_LOG_INFO, "XRGB8888 is not supported.\n");
       return false;
    }
+#endif
 
    check_variables();
 
